@@ -3,49 +3,40 @@
 This project provides a complete pipeline for identifying deepfake (AI-generated) audio versus genuine (human) audio. It uses a Convolutional Neural Network (CNN) built with PyTorch, trained on Mel-frequency cepstral coefficients (MFCC) extracted from audio clips.
 
 ## Features
-- **Data Preprocessing**: Extracts MFCCs using `librosa` and pads/truncates to a fixed length.
+- **Data Preprocessing**: Extracts MFCCs and pads/truncates them to a fixed length.
 - **Model Architecture**: A 2D CNN with 3 convolutional layers followed by fully connected layers, optimized for spectrogram/MFCC inputs.
-- **Training Pipeline**: Handles class imbalance, tracks validation loss, and saves the best model based on F1-score.
-- **Inference Script**: Predicts new audio files via command-line.
-- **Streamlit Web App**: A user-friendly web interface for uploading audio and viewing predictions.
+- **Kaggle Training Pipeline**: An executable Jupyter Notebook (`notebook.ipynb`) designed to train seamlessly on Kaggle's free GPUs using The Fake-or-Real Dataset.
+- **Pre-trained Model**: Includes the fully trained model (`deepfake_audio_model.pth`) ready for inference.
+- **Streamlit Web App**: A beautiful, premium corporate web interface for uploading audio and viewing real-time deepfake predictions.
+- **Command-Line Inference**: Predicts new audio files via `predict.py`.
 
 ## Setup Instructions
 
 ### 1. Install Dependencies
-Ensure you have Python 3.8+ installed. Create a virtual environment (recommended) and install the dependencies:
+Ensure you have Python 3.8+ installed. Install the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Dataset Preparation
-The project is configured to use **The Fake-or-Real Dataset** (from Kaggle).
-- Download the dataset and place the `LA_norm/train` folder in a `dataset/` directory in the root of this project.
-- Expected structure:
-  ```text
-  dataset/LA_norm/train/
-  ├── genuine/
-  └── spoof/
-  ```
-*(Note: If your dataset has a different structure or uses a protocol text file, adjust the `load_data` function in `train_pipeline.py`.)*
-
-### 3. Training the Model
-Run the training script to train the model and save `deepfake_audio_model.pth`:
+### 2. Running the Web App (Recommended)
+Launch the interactive web app to test the pre-trained model on any audio file:
 ```bash
-python train_pipeline.py
+streamlit run app.py
 ```
-This script will output the training progress, accuracy, EER (Equal Error Rate), F1 score, and confusion matrix.
+This will open the "Audio Integrity Verification System" in your browser. Upload any `.wav` or `.mp3` file to see if it is classified as a "Genuine" human voice or an "AI Deepfake".
 
-### 4. Command-Line Inference
-Test the trained model on a single audio file:
+### 3. Command-Line Inference
+You can also test the trained model on a single audio file via the terminal:
 ```bash
 python predict.py path/to/audio.wav
 ```
 
-### 5. Running the Streamlit App
-Launch the interactive web app:
-```bash
-streamlit run app.py
-```
+## Model Training (Kaggle)
+The model was trained using the `notebook.ipynb` file directly on Kaggle. To retrain the model yourself:
+1. Upload `notebook.ipynb` to a new Kaggle Notebook.
+2. Add "The Fake-or-Real Dataset" to the notebook environment.
+3. Turn on the GPU accelerator and click "Run All".
+4. The notebook will calculate Error Metrics (Accuracy, F1, EER, Confusion Matrix) and output the `deepfake_audio_model.pth` file.
 
 ## Methodology & Architecture
 1. **Feature Extraction**: Audio files are resampled to 16kHz. We extract 40 MFCC features over a fixed window (approx. 3 seconds).
