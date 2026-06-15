@@ -10,7 +10,7 @@ env/
 venv/
 
 # Deep Learning / Models
-*.pth
+
 *.keras
 *.h5
 
